@@ -57,7 +57,7 @@ nav a:hover {
 /* ===== Section Blocks ===== */
 section {
     max-width:900px;
-    padding:60px 20px;
+    padding:25px 20px;
     margin:auto;
 }
 
@@ -113,12 +113,14 @@ footer {
 .contact-icons i {
   display: inline-block !important;
   font-style: normal; /* prevent italic fallback */
-  color: #555;        /* icon color */
+  color: whitesmoke; /* subtle default color */
+  /*color: #555; */       /* icon color */
 }
 
 .contact-icons ul li a {
   font-size: 1.8rem;
-  color: #555; /* subtle default color */
+  /*color: #555;*/ /* subtle default color */
+  color: whitesmoke; /* subtle default color */
   transition: color 0.3s, transform 0.2s;
 }
 
@@ -133,3 +135,85 @@ footer {
     font-size: 1.5rem;
   }
 }
+
+
+/* Header styling */
+header {
+  text-align: center;
+  color: white; /* default text color */
+  padding: 2rem 1rem 3rem 1rem; /* reduce top and bottom padding if needed */
+  position: relative;
+}
+
+header img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  margin: 0.5rem 0 0.3rem 0; /* reduce space below h1 */
+  font-size: 2.5rem;
+}
+
+header h2 {
+  margin: 0 0 0.1rem 0; /* reduce space below h2 */
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+
+/* Header contact icons */
+header .contact-icons {
+  margin-top: 0.5rem; /* small space above icons */
+}
+
+header .contact-icons ul {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+header .contact-icons ul li a {
+  font-size: 1.6rem;
+  color: white; /* default icon color */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+}
+
+header .contact-icons ul li a:hover {
+  transform: scale(1.3);
+  background-color: rgba(255, 255, 255, 0.2); /* subtle white circle */
+  color: #ffd700; /* gold hover color */
+}
+
+/*!* Contact icons in header *!*/
+/*header .contact-icons {*/
+/*  margin-top: 0.1rem; !* small space above icons *!*/
+/*}*/
+
+/*header .contact-icons ul {*/
+/*  justify-content: center;*/
+/*  gap: 1rem;*/
+/*}*/
+
+/*header .contact-icons ul li a {*/
+/*  font-size: 1.6rem;*/
+/*  color: white; !* make icons white *!*/
+/*  transition: transform 0.2s, color 0.2s;*/
+/*}*/
+
+/*header .contact-icons ul li a:hover {*/
+/*  transform: scale(1.2);*/
+/*  color: #ffd700; !* optional hover color, e.g., gold *!*/
+/*}*/
