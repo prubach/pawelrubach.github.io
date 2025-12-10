@@ -38,10 +38,11 @@
 
     let html = "<ul class='conference-container'>";
     filtered.forEach(c => {
+      const titleHTML = c.link ? `<a href='${c.link}' target='_blank'>${c.title}</a>` : c.title;
       html += `
         <li class='conference-item'>
           <span class='conf-year'>${c.year}</span>
-          <span class='conf-title'><a href='${c.link}' target='_blank'>${c.title}</a></span>
+          <span class='conf-title'>${titleHTML}</span>
           <span class='conf-name'>${c.conference}</span>
           <span class='conf-location'>${c.location}</span>
           <span class='conf-type'>${c.type}</span>
