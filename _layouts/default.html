@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ page.title }}</title>
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-<!--<script src="{{ '/update_pubs.js' | relative_url }}"></script>-->
-</head>
+{% include head.html %}
 <body>
 
 {% include header.html %}
@@ -16,7 +10,6 @@
   {% include publications.html %}
   {% include projects.html %}
   {% include teaching.html %}
-  {% include contact.html %}
 </main>
 
 <footer>

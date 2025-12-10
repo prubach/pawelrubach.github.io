@@ -95,3 +95,41 @@ footer {
   text-decoration: underline;
   color: #555;            /* slightly darker on hover */
 }
+
+
+
+/* Contact Icons styling */
+.contact-icons ul {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center; /* center icons */
+  align-items: center;
+  padding: 0.5rem 0;
+  margin: 0;
+  list-style: none;
+  flex-wrap: wrap; /* wrap on small screens */
+}
+
+.contact-icons i {
+  display: inline-block !important;
+  font-style: normal; /* prevent italic fallback */
+  color: #555;        /* icon color */
+}
+
+.contact-icons ul li a {
+  font-size: 1.8rem;
+  color: #555; /* subtle default color */
+  transition: color 0.3s, transform 0.2s;
+}
+
+.contact-icons ul li a:hover {
+  color: #0073b1; /* hover color example (LinkedIn blue) */
+  transform: scale(1.2);
+}
+
+/* Optional: smaller icons on mobile */
+@media (max-width: 600px) {
+  .contact-icons ul li a {
+    font-size: 1.5rem;
+  }
+}
