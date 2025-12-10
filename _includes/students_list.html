@@ -51,6 +51,34 @@ categories.forEach(c => {
   categoryFilter.appendChild(opt);
 });
 
+function renderTheses(list) {
+    thesisList.innerHTML = `
+        <div class="thesis-table-header thesis-row">
+            <div class="col-year">Year</div>
+            <div class="col-author">Author</div>
+            <div class="col-category">Category</div>
+            <div class="col-title">Title</div>
+        </div>
+    `;
+
+    list.forEach(t => {
+        const item = document.createElement("div");
+        item.className = "thesis-row";
+
+        item.innerHTML = `
+            <div class="col-year">${t.year}</div>
+            <div class="col-author">${t.author ?? "Unknown"}</div>
+            <div class="col-category">${t.category}</div>
+            <div class="col-title">
+                <a href="${t.url}" target="_blank">${t.title}</a>
+            </div>
+        `;
+
+        thesisList.appendChild(item);
+    });
+}
+
+
 // Render thesis list
 function renderList() {
   const selectedYear = yearFilter.value;
@@ -72,13 +100,14 @@ function renderList() {
     );
   }
 
+  renderTheses(filtered)
   // Render list
-  let html = "<ul>";
-  filtered.forEach(t => {
-    html += `<li>${t.year} — <em>${t.author}</em> (${t.category}) — <a href="${t.url}" target="_blank"><i>${t.title}</i></a></li>`;
-  });
-  html += "</ul>";
-  thesisList.innerHTML = html;
+  // let html = "<ul>";
+  // filtered.forEach(t => {
+  //   html += `<li>${t.year} — <em>${t.author}</em> (${t.category}) — <a href="${t.url}" target="_blank"><i>${t.title}</i></a></li>`;
+  // });
+  // html += "</ul>";
+  //thesisList.innerHTML = html;
 
   renderChart(filtered);
 }
