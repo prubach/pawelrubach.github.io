@@ -25,6 +25,8 @@ jobs:
 
       - name: Commit and push results
         run: |
+          git config --global user.email "pawel.rubach@github.action"
+          git config --global user.name "Pawel Rubach"
           git add _data/publications.yaml
           git add _data/publications.json
           git add assets/data/pawelrubach.bib

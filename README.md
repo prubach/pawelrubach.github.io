@@ -1,6 +1,6 @@
 # My personal website
 
-Hosted at prubach.github.io
+Hosted at https://prubach.github.io
 
 ## Development
 
