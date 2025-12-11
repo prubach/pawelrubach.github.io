@@ -1,8 +1,8 @@
 {
   "categories": [
-    "Distributed Computing",
+    "Structural Biology",
     "Machine Learning",
-    "Structural Biology"
+    "Distributed Computing"
   ],
   "assignments": {
     "orcid_191687058": [
@@ -24,7 +24,7 @@
       "Structural Biology"
     ],
     "orcid_161856696": [
-      "Structural Biology"
+      "Structural Biology", "Machine Learning"
     ],
     "orcid_133242710": [
       "Structural Biology"
