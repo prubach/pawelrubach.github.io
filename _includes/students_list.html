@@ -2,24 +2,24 @@
 <h1>My Students' Diploma Thesis</h1>
 
 <div style="margin-bottom:1rem;">
-  <label style="font-size:1.1em;font-weight:bold;">Filter by year:</label>
+  <label style="font-size:1.1em;font-weight:bold;">Year:</label>
   <select id="yearFilter">
     <option value="all">All years</option>
   </select>
 
-  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Filter by category:</label>
+  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Type:</label>
   <select id="categoryFilter">
     <option value="all">All categories</option>
   </select>
 
-  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Filter by lang:</label>
+  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Lang:</label>
   <select id="languageFilter">
     <option value="all">All</option>
   </select>
 
-  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Filter by lab:</label>
+  <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Lab:</label>
   <select id="labFilter">
-    <option value="all">All</option>
+    <option value="all">All labs</option>
   </select>
 
   <label style="font-size:1.1em;font-weight:bold; margin-left:1rem;">Search:</label>
@@ -28,6 +28,8 @@
 
 <div id="thesis-list"></div>
 
+<div id="thesis-count" style="margin-top: 1rem; font-weight: bold;"></div>
+
 <hr>
 
 <h2>Thesis Count Per Year</h2>
@@ -35,20 +37,26 @@
 
 <script>
 const all_theses = {{ site.data.students | jsonify }};
+const lab_data = {{ site.data.students_collaboration | jsonify }};
 let theses = all_theses
-    .filter(t => t.year && t.year !== "null")       // hide null or missing year
-    .sort((a, b) => Number(b.year) - Number(a.year)); // newest → oldest
-
-const collaborators = {{ site.data.students_collaboration | jsonify }};
-const collaboratorMap = {};
-collaborators.forEach(c => {
-    collaboratorMap[c.author] = { lab: c.lab, url: c.url };
-});
+    .filter(t => t.year && t.year !== "null")
+    .sort((a, b) => Number(b.year) - Number(a.year));
 
 const thesisList = document.getElementById("thesis-list");
 const yearFilter = document.getElementById("yearFilter");
 const categoryFilter = document.getElementById("categoryFilter");
+const languageFilter = document.getElementById("languageFilter");
+const labFilter = document.getElementById("labFilter");
 const searchBox = document.getElementById("searchBox");
+
+// Add lab info to each thesis if author is in lab_data
+theses.forEach(t => {
+  const labEntry = lab_data.find(l => l.author === t.author);
+  if (labEntry) {
+    t.lab = labEntry.lab;
+    t.lab_url = labEntry.url;
+  }
+});
 
 // Populate year filter
 const years = [...new Set(theses.map(t => t.year))].sort().reverse();
@@ -68,25 +76,22 @@ categories.forEach(c => {
   categoryFilter.appendChild(opt);
 });
 
-const languageFilter = document.getElementById("languageFilter");
-const labFilter = document.getElementById("labFilter");
-
-// Languages
+// Populate language filter
 const languages = [...new Set(theses.map(t => t.lang))].sort();
 languages.forEach(l => {
-    const opt = document.createElement("option");
-    opt.value = l;
-    opt.innerText = l;
-    languageFilter.appendChild(opt);
+  const opt = document.createElement("option");
+  opt.value = l;
+  opt.innerText = l;
+  languageFilter.appendChild(opt);
 });
 
-// Labs
-const labs = [...new Set(theses.map(t => collaboratorMap[t.author] ? collaboratorMap[t.author].lab : null))].filter(Boolean).sort();
+// Populate lab filter
+const labs = [...new Set(theses.map(t => t.lab).filter(Boolean))].sort();
 labs.forEach(l => {
-    const opt = document.createElement("option");
-    opt.value = l;
-    opt.innerText = l;
-    labFilter.appendChild(opt);
+  const opt = document.createElement("option");
+  opt.value = l;
+  opt.innerText = l;
+  labFilter.appendChild(opt);
 });
 
 function renderTheses(list) {
@@ -95,79 +100,70 @@ function renderTheses(list) {
             <div class="col-year">Year</div>
             <div class="col-author">Author</div>
             <div class="col-category">Type</div>
-            <div class="col-lang">Lang</div>
-            <div class="col-lab">Lab</div>
             <div class="col-title">Title</div>
+            <div class="col-language">Lang</div>
+            <div class="col-lab">Lab</div>
         </div>
     `;
 
     list.forEach(t => {
-        const item = document.createElement("div");
-        item.className = "thesis-row";
+      const item = document.createElement("div");
+      item.className = "thesis-row";
 
-        const langFlag = t.lang === "EN" ? "🇬🇧" : "🇵🇱";
+      const labContent = t.lab ? `<a href="${t.lab_url}" target="_blank">${t.lab}</a>` : "";
 
-        let labHTML = '';
-        if (collaboratorMap[t.author]) {
-            const lab = collaboratorMap[t.author];
-            labHTML = `<a href="${lab.url}" target="_blank">
-                           <img src="/assets/images/labs/${lab.lab}.png" alt="${lab.lab} logo" class="lab-logo">
+      const langFlag = t.lang === "EN" ? "🇬🇧" : "🇵🇱";
+
+      let labHTML = '';
+      if (t.lab) {
+            labHTML = `<a href="${t.lab_url}" target="_blank">
+                           <img src="/assets/images/labs/${t.lab}.png" alt="${t.lab} logo" class="lab-logo">
                        </a>`;
-        }
+      }
 
-        /*<div class="col-lang">${langFlag}</div>*/
-        item.innerHTML = `
+      item.innerHTML = `
             <div class="col-year">${t.year}</div>
             <div class="col-author">${t.author ?? "Unknown"}</div>
             <div class="col-category">${t.category}</div>
-
-            <div class="col-lang">${langFlag}</div>
-            <div class="col-lab">${labHTML}</div>
             <div class="col-title">
                 <a href="${t.url}" target="_blank">${t.title}</a>
             </div>
+            <div class="col-language">${langFlag}</div>
+            <div class="col-lab">${labHTML}</div>
         `;
 
-        thesisList.appendChild(item);
+      /*<div className="col-language">${t.language}</div>
+      <div className="col-lab">${labContent}</div>*/
+      thesisList.appendChild(item);
     });
 }
-
-
 
 function renderList() {
   const selectedYear = yearFilter.value;
   const selectedCategory = categoryFilter.value;
-  const selectedLang = languageFilter.value;
+  const selectedLanguage = languageFilter.value;
   const selectedLab = labFilter.value;
   const searchText = searchBox.value.toLowerCase().trim();
 
   let filtered = theses;
 
-  if (selectedYear !== "all") {
-    filtered = filtered.filter(t => t.year === selectedYear);
-  }
-  if (selectedCategory !== "all") {
-    filtered = filtered.filter(t => t.category === selectedCategory);
-  }
-  if (selectedLang !== "all") {
-    filtered = filtered.filter(t => t.language === selectedLang);
-  }
-  if (selectedLab !== "all") {
-    filtered = filtered.filter(t => collaboratorMap[t.author] && collaboratorMap[t.author].lab === selectedLab);
-  }
+  if (selectedYear !== "all") filtered = filtered.filter(t => t.year === selectedYear);
+  if (selectedCategory !== "all") filtered = filtered.filter(t => t.category === selectedCategory);
+  if (selectedLanguage !== "all") filtered = filtered.filter(t => t.lang === selectedLanguage);
+  if (selectedLab !== "all") filtered = filtered.filter(t => t.lab === selectedLab);
   if (searchText) {
     filtered = filtered.filter(t =>
-      t.author.toLowerCase().includes(searchText) ||
-      t.title.toLowerCase().includes(searchText)
+      (t.author && t.author.toLowerCase().includes(searchText)) ||
+      (t.title && t.title.toLowerCase().includes(searchText))
     );
   }
 
   renderTheses(filtered);
   renderChart(filtered);
+  // Update count
+  document.getElementById("thesis-count").innerText = `Total theses shown: ${filtered.length}`;
 }
 
-
-// Render chart: separate bars for Master/Bachelor
 function renderChart(filtered) {
   const counts = {};
   filtered.forEach(t => {
@@ -198,11 +194,51 @@ function renderChart(filtered) {
 // Event listeners
 yearFilter.addEventListener("change", renderList);
 categoryFilter.addEventListener("change", renderList);
-searchBox.addEventListener("input", renderList);
 languageFilter.addEventListener("change", renderList);
 labFilter.addEventListener("change", renderList);
+searchBox.addEventListener("input", renderList);
 
-// Initial render
 renderList();
 </script>
-</section>
+<style>
+    /* Grid layout for thesis table */
+.thesis-table-header, .thesis-row {
+  display: grid;
+  grid-template-columns: 60px 180px 100px 1fr 60px 120px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.thesis-table-header {
+  font-weight: 600;
+  border-bottom: 2px solid #ccc;
+}
+
+.thesis-row {
+  border-bottom: 1px solid #eee;
+}
+
+.col-year { text-align:center; }
+.col-author { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.col-category { text-align:center; }
+.col-title { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.col-language { text-align:center; }
+.col-lab { text-align:center; }
+
+@media (max-width: 768px) {
+  .thesis-table-header, .thesis-row {
+    grid-template-columns: 50px 150px 80px 1fr 50px 100px;
+  }
+  .col-author, .col-title {
+    font-size: 0.85rem;
+  }
+}
+.col-title {
+  overflow: visible;      /* allow content to expand */
+  text-overflow: clip;    /* remove ellipsis */
+  white-space: normal;    /* allow wrapping */
+  word-break: break-word; /* break long words if needed */
+}
+
+</style>
