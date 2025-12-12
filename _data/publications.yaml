@@ -134,7 +134,7 @@
 - id: orcid_141943059
   title: Knot or Not? Sequence-Based Identification of Knotted Proteins With Machine
     Learning
-  journal: 'Preprint: [{''name'': ''bioRxiv''}]'
+  journal: 'Preprint: bioRxiv'
   year: '2023'
   doi: 10.1101/2023.09.06.556468
   authors:
@@ -153,7 +153,7 @@
   citation: ''
 - id: orcid_137096785
   title: Proteins containing 6-crossing knot types and their folding pathways
-  journal: 'Preprint: [{''name'': ''bioRxiv''}]'
+  journal: 'Preprint: bioRxiv'
   year: '2023'
   doi: 10.1101/2023.06.16.545156
   authors:
@@ -201,7 +201,7 @@
   citation: ''
 - id: orcid_105580334
   title: New 63 knot and other knots in human proteome from AlphaFold predictions
-  journal: 'Preprint: [{''name'': ''bioRxiv''}]'
+  journal: 'Preprint: bioRxiv'
   year: '2022'
   doi: 10.1101/2021.12.30.474018
   authors:
