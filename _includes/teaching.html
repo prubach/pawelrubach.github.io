@@ -1,132 +1,58 @@
 <section id="teaching">
   <h2>Teaching / Courses</h2>
 
-  {% assign present = site.data.courses | where: "status", "present" %}
-  {% assign past = site.data.courses | where: "status", "past" %}
+  <!-- LEGEND -->
+  <div id="teaching-legend">
 
+<!--  <div class="legend-row">-->
+<!--    <span class="legend-label">Status:</span>-->
+<!--    <span class="badge badge-current">Current</span>-->
+<!--    <span class="badge badge-years">Past - Years</span>-->
+<!--  </div>-->
 
-    {% comment %}
-    Prepare sorted lists by extracting the numeric latest year
-    {% endcomment %}
-
-    {% assign present = site.data.courses | where: "status", "present" %}
-    {% assign past = site.data.courses | where: "status", "past" %}
-
-    {%- assign presentSorted = "" | split: "," -%}
-    {%- assign pastSorted = "" | split: "," -%}
-
-    {% for c in present %}
-      {% assign yr = c.years | replace: "–", "-" | split: "-" | last | plus: 0 %}
-      {% assign c = c | merge: Hash:"sorted_year=" | merge: sorted_year: yr %}
-      {% assign presentSorted = presentSorted | push: c %}
-    {% endfor %}
-
-    {% for c in past %}
-      {% assign yr = c.years | replace: "–", "-" | split: "-" | last | plus: 0 %}
-      {% assign c = c | merge: Hash:"sorted_year=" | merge: sorted_year: yr %}
-      {% assign pastSorted = pastSorted | push: c %}
-    {% endfor %}
-
-    {% assign presentSorted = presentSorted | sort: "sorted_year" | reverse %}
-    {% assign pastSorted = pastSorted | sort: "sorted_year" | reverse %}
-
-  <h3><a href="{{ '/students/' | relative_url }}">Supervised Master and Bachelor thesis</a></h3>
-
-  <!-- Present Courses -->
-  <h3>Current Courses</h3>
-  <div class="course-grid">
-    {% for course in present %}
-      <a class="course-card {{ course.category }}"
-         {% if course.institution == "SGH" %}
-           href="https://usosweb.sgh.waw.pl/kontroler.php?_action=katalog2/przedmioty/pokazPrzedmiot&prz_kod={{ course.id }}-D"
-         {% elsif course.institution == "MiMUW" %}
-           href="https://informatorects.uw.edu.pl/pl/courses/view?prz_kod={{ course.id }}"
-         {% endif %}
-         target="_blank">
-
-         {% if course.institution == "SGH" %}
-            <img class="institution-logo" src="{{ '/assets/images/logos/sgh.png' | relative_url }}" alt="SGH logo">
-         {% elsif course.institution == "MiMUW" %}
-            <img class="institution-logo" src="{{ '/assets/images/logos/mimuw.png' | relative_url }}" alt="University of Warsaw logo">
-         {% endif %}
-
-         <div class="course-icon">{{ course.icon }}</div>
-         <div class="course-title">{{ course.name }}</div>
-
-         <div class="course-meta">
-           <!--<span class="institution">{{ course.institution }}</span>-->
-           <span class="level">{{ course.level | capitalize }}</span>
-           <span class="years">{{ course.years }}</span>
-           <span class="language">
-             {% if course.language == "PL" %}🇵🇱{% elsif course.language == "EN" %}🇬🇧{% endif %}
-           </span>
-           {% if course.original %}<span class="original">*</span>{% endif %}
-           <span class="tag tag-{{ course.category }}">
-              {% if course.category == "teaching_coordination" %}
-                Teaching + Coordination
-              {% else %}
-                {{ course.category | capitalize }}
-              {% endif %}
-           </span>
-           <!--<span class="category-label">{{ course.category | capitalize }}</span>-->
-         </div>
-      </a>
-    {% endfor %}
+  <div class="legend-row">
+    <span class="legend-label">Category:</span>
+    <span class="badge badge-teaching">Teaching</span>
+    <span class="badge badge-coordination">Coordination</span>
+    <span class="badge badge-teaching_coordination">Teach + Coord</span>
+    <span class="legend-details">Course taught personally / course only coordinated / both taught and coordinated.</span>
   </div>
 
-  <!-- Past Courses -->
+  <div class="legend-row">
+    <span class="legend-label">Level:</span>
+      <span class="badge badge-level">Bachelor / Master / Unified</span><span class="legend-details"> Until 2006 SGH offered only unified long-cycle studies which were later replaced with the current 2-cycle system.</span>
+  </div>
+      <div class="legend-row">
+        <span class="legend-label">Authorship:</span>
+          <span class="badge badge-original">Authored</span><span class="legend-details"> indicates that the course and its content were originally created and proposed by me sometimes with the help of a team of colleagues from my Insitute.</span>
+      </div>
+</div>
+    <br>
+
+
+  {% assign sorted_courses = site.data.courses | sort: "sort_key" | reverse %}
+
+  <!-- CURRENT COURSES -->
+  <h3>Currently Taught Courses</h3>
+  <div class="course-grid">
+    {% for course in sorted_courses %}
+      {% if course.status == "current" %}
+        {% include course_tile.html course=course %}
+      {% endif %}
+    {% endfor %}
+  </div>
+    <br>
+
+  <!-- PAST COURSES -->
   <h3>Past Courses</h3>
   <div class="course-grid">
-    {% for course in pastSorted %}
-      <a class="course-card {{ course.category }}"
-         {% if course.institution == "SGH" %}
-           href="https://usosweb.sgh.waw.pl/kontroler.php?_action=katalog2/przedmioty/pokazPrzedmiot&prz_kod={{ course.id }}-D"
-         {% elsif course.institution == "MiMUW" %}
-           href="https://informatorects.uw.edu.pl/pl/courses/view?prz_kod={{ course.id }}"
-         {% endif %}
-         target="_blank">
-         {% if course.institution == "SGH" %}
-            <img class="institution-logo" src="{{ '/assets/images/logos/sgh.png' | relative_url }}" alt="SGH logo">
-         {% elsif course.institution == "MiMUW" %}
-            <img class="institution-logo" src="{{ '/assets/images/logos/mimuw.png' | relative_url }}" alt="University of Warsaw logo">
-         {% endif %}
-         <div class="course-icon">{{ course.icon }}</div>
-         <div class="course-title">{{ course.name }}</div>
-
-         <div class="course-meta">
-           <span class="level">{{ course.level | capitalize }}</span>
-           <!--<span class="institution">{{ course.institution }}</span>-->
-           <span class="years">{{ course.years }}</span>
-           <span class="language">
-             {% if course.language == "PL" %}🇵🇱{% elsif course.language == "EN" %}🇬🇧{% endif %}
-           </span>
-           {% if course.original %}<span class="original">*</span>{% endif %}
-           <span class="tag tag-{{ course.category }}">
-              {% if course.category == "teaching_coordination" %}
-                Teaching + Coordination
-              {% else %}
-                {{ course.category | capitalize }}
-              {% endif %}
-           </span>
-
-         </div>
-      </a>
+    {% for course in sorted_courses %}
+      {% if course.status == "past" %}
+        {% include course_tile.html course=course %}
+      {% endif %}
     {% endfor %}
   </div>
-
-    <p class="course-legend">
-      <strong>Legend:</strong><br>
-      <strong>Level:</strong>
-      <span class="tag tag-taught">Undergraduate</span> - Bachelor,
-      <span class="tag tag-taught">Graduate</span> - Master,
-      <span class="tag tag-taught">Unified</span> - Until 2006 SGH offered only unified long-cycle studies which were later replaced with the current 2-cycle system.<br>
-
-      <strong>Role:</strong>
-      <span class="tag tag-taught">Teaching</span> – course taught directly,
-      <span class="tag tag-coord">Coordination</span> – course coordinated or managed<br>
-
-      <strong>Authorship:</strong>
-      <span>Authored course</span> indicates that the course and its content were originally created and proposed by me.
-    </p>
-
+    <br>
+   <h3><a href="{{ '/students/' | relative_url }}">Supervised Master and Bachelor thesis</a></h3>
 </section>
+
