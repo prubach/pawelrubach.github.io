@@ -77,16 +77,64 @@ def extract_year_from_author_td(author_td):
         return None
 
 
+def extract_author_year_language___fe(author_td):
+    """
+    Given the <td> containing thesis info,
+    return (author_name, year, lang)
+    """
+    import re
+    from selenium.common.exceptions import NoSuchElementException
+
+    author_name = "UNKNOWN"
+    year = None
+    lang = 'PL'  # default
+
+    try:
+        # Loop over all table rows in this td
+        rows = author_td.find_elements(By.TAG_NAME, "tr")
+        for row in rows:
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if len(cells) >= 2:
+                label = cells[0].text.strip().lower()
+                value = cells[1].text.strip()
+
+                # Author
+                if "author" in label or "autor" in label:
+                    author_name = value
+
+                # Year / Date of diploma
+                elif "date of diploma exam" in label or "data złożenia" in label:
+                    match = re.search(r"\b(20\d{2})\b", value)
+                    if match:
+                        year = match.group(1)
+
+                # Language
+                elif "language" in label or "język pracy" in label:
+                    val_upper = value.upper()
+                    if "EN" in value:
+                        lang = "EN"
+                    # if val_upper in ["PL", "EN", "ES", "DE", "FR", "RU", "IT", "PT"]:
+                    #     lang = val_upper
+
+    except NoSuchElementException:
+        pass
+
+    return author_name, year, lang
 
 
-def extract_author_and_year(author_td):
+def extract_author_and_year(driver):
     """
     Given the <td> containing Author info,
     return (author_name, year)
     """
     author_name = None
     year = None
+    lang = 'PL'
 
+    author_td = driver.find_element(
+        By.XPATH,
+        "//td[contains(text(),'Author') or contains(text(),'Autor')]/following-sibling::td"
+    )
     # Extract author name
     try:
         a = author_td.find_element(By.CSS_SELECTOR, "div.td.padding-0 a")
@@ -94,13 +142,12 @@ def extract_author_and_year(author_td):
     except:
         author_name = "UNKNOWN"
 
-    # Extract year from 'Date of diploma exam'
     try:
         note_divs = author_td.find_elements(By.CSS_SELECTOR, "div.note")
         for div in note_divs:
             try:
                 span = div.find_element(By.CSS_SELECTOR, "span.bold")
-                if "Date of diploma exam" in span.text:
+                if "Date of diploma exam" or "Data złożenia" in span.text:
                     full_text = div.text.replace(span.text, "").strip()
                     match = re.search(r"\b(20\d{2})\b", full_text)
                     if match:
@@ -110,7 +157,21 @@ def extract_author_and_year(author_td):
     except:
         year = None
 
-    return author_name, year
+    try:
+        # Find the table cell containing Language / Język pracy
+        lang_td = driver.find_element(
+            By.XPATH,
+            "//td[contains(text(),'Language of the thesis') or contains(text(),'Język pracy')]/following-sibling::td"
+        )
+        lang_text = lang_td.text.strip()
+        if 'EN' in lang_text:
+            lang = 'EN'
+        elif 'PL' in lang_text:
+            lang = 'PL'
+    except:
+        lang = 'PL'
+
+    return author_name, year, lang
 
 
 def extract_list(url, category_label):
@@ -149,15 +210,14 @@ def extract_list(url, category_label):
         driver.execute_script("window.open(arguments[0]);", detail_url)
         driver.switch_to.window(driver.window_handles[-1])
 
-        author_td = driver.find_element(By.XPATH, "//td[contains(text(),'Author')]/following-sibling::td")
-        #year = extract_year_from_author_td(author_td)
-        author_name, year = extract_author_and_year(author_td)
+        author_name, year, lang = extract_author_and_year(driver)
 
         results.append({
             "title": title,
             "author": author_name,
             "year": year,
             "url": detail_url,
+            "lang": lang,
             "category": category_label
         })
 
