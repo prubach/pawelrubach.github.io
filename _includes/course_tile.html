@@ -12,7 +12,7 @@ Assumes course is passed in as "course"
 
 <a class="course-card
        {% if course.institution == "MiMUW" %}mimuw{% endif %}"
-   href="{{ base_url }}" target="_blank">
+   href="{{ base_url }}" target="_blank" aria-label="Course: {{ course.name }}">
 
    <!-- rest of the content remains the same -->
 <!--

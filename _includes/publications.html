@@ -60,7 +60,7 @@
           <span class="pub-authors">${formattedAuthors}</span><br>
           ${p.journal ? `<span class="pub-journal">${p.journal}</span>` : ""}
           ${p.year ? `<span class="pub-year">${p.year}</span>` : ""}
-          ${p.doi ? `<a class="pub-doi" href="https://doi.org/${p.doi}" target="_blank">DOI: ${p.doi}</a>` : ""}
+          ${p.doi ? `<a class="pub-doi" href="https://doi.org/${p.doi}" target="_blank" aria-label="Publicaiton with DOI: ${p.doi}">DOI: ${p.doi}</a>` : ""}
           <br>
           <span class="pub-cat-label">
             Categories: ${pubCats.join(", ")}
