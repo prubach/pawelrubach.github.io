@@ -1,3 +1,19 @@
+- id: orcid_201424571
+  title: How to mitigate the caveat emptor burden of human and machine users of the
+    Protein Data Bank
+  journal: Acta Crystallographica Section D Structural Biology
+  year: '2026'
+  doi: 10.1107/S2059798325011477
+  authors:
+  - Alexander Wlodawer
+  - Pawel Rubach
+  - Zbigniew Dauter
+  - Wojciech Dec
+  - Dariusz Brzezinski
+  - Wladek Minor
+  - Mariusz Jaskolski
+  publisher: International Union of Crystallography (IUCr)
+  citation: ''
 - id: orcid_191687058
   title: A Critical Look at the Crystal Structures of cAMP-Dependent Protein Kinases
   journal: Kinases and Phosphatases
